@@ -40,3 +40,8 @@ std::optional<Intersection> Sphere::intersect(const core::Ray &ray) const {
 
     return Intersection{.ray = ray, .object = this, .t = t0};
 }
+
+pathtracer::core::Vec3 Sphere::normalAt(const core::Point3 &p) const {
+    auto result = p - center;
+    return result.normalize();
+}

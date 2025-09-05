@@ -25,6 +25,8 @@ namespace pathtracer::core {
 
         Color operator*(const Color &rhs) const;
 
+        Color operator*(const Float &rhs) const;
+
         static Color black();
 
         static Color white();

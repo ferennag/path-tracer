@@ -48,6 +48,10 @@ Color Color::operator*(const Color &rhs) const {
     return {this->r * rhs.r, this->g * rhs.g, this->b * rhs.b};
 }
 
+Color Color::operator*(const Float &rhs) const {
+    return {this->r * rhs, this->g * rhs, this->b * rhs};
+}
+
 Color Color::black() {
     return {0.0, 0.0, 0.0};
 }

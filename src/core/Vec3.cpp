@@ -36,3 +36,7 @@ Vec3 Vec3::operator*(const Float rhs) const {
         this->z * rhs
     };
 }
+
+Vec3 Vec3::operator-() const {
+    return {-x, -y, -z};
+}

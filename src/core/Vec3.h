@@ -18,5 +18,7 @@ namespace pathtracer::core {
         [[nodiscard]] Float dot(const Vec3 &rhs) const;
 
         Vec3 operator*(Float rhs) const;
+
+        Vec3 operator-() const;
     };
 }

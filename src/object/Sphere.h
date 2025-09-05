@@ -12,5 +12,7 @@ namespace pathtracer::object {
         ~Sphere() override = default;
 
         [[nodiscard]] std::optional<Intersection> intersect(const core::Ray &ray) const override;
+
+        [[nodiscard]] core::Vec3 normalAt(const core::Point3 &p) const override;
     };
 }

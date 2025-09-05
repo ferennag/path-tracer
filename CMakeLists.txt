@@ -27,6 +27,8 @@ add_executable(${PROJECT_NAME}
         src/object/Intersection.h
         src/object/Sphere.cpp
         src/object/Sphere.h
+        src/light/Light.h
+        src/material/Material.h
 )
 target_compile_options(${PROJECT_NAME} PUBLIC -Wall)
 target_link_libraries(${PROJECT_NAME} PUBLIC SDL3::SDL3)
