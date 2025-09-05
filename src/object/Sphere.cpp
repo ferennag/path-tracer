@@ -8,18 +8,18 @@ Sphere::Sphere(const core::Point3 &center, core::Float radius) : center(center),
 }
 
 std::optional<Intersection> Sphere::intersect(const core::Ray &ray) const {
-    auto L = ray.origin - center;
-    auto a = ray.direction.dot(ray.direction);
-    auto b = 2 * ray.direction.dot(L);
-    auto c = L.dot(L) - radius * radius;
-    auto discriminant = b * b - 4 * a * c;
+    const auto L = ray.origin - center;
+    const auto a = ray.direction.dot(ray.direction);
+    const auto b = 2 * ray.direction.dot(L);
+    const auto c = L.dot(L) - radius * radius;
+    const auto discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0.0) {
         return {};
     }
 
     if (discriminant == 0.0) {
-        auto t = (-b + std::sqrt(discriminant)) / 2 * a;
+        const auto t = (-b + std::sqrt(discriminant)) / 2 * a;
         return Intersection{.ray = ray, .object = this, .t = t};
     }
 
