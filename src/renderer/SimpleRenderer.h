@@ -3,8 +3,11 @@
 
 namespace pathtracer::renderer {
     class SimpleRenderer : public Renderer {
-        ImageBuffer buffer;
+        unsigned int width, height;
+        std::promise<ImageBuffer> promise;
+        std::mutex renderMutex;
 
+        ImageBuffer doRender(const scene::Scene &scene);
     public:
         SimpleRenderer(unsigned int width, unsigned int height);
 
@@ -12,6 +15,6 @@ namespace pathtracer::renderer {
 
         void resize(unsigned int width, unsigned int height) override;
 
-        [[nodiscard]] ImageBuffer render(const scene::Scene &scene) override;
+        [[nodiscard]] std::future<ImageBuffer> render(const scene::Scene &scene) override;
     };
 }

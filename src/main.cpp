@@ -5,6 +5,7 @@
 #include "scene/Scene.h"
 
 using namespace pathtracer;
+using namespace std::chrono_literals;
 
 int main(int argc, char **argv) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -31,6 +32,7 @@ int main(int argc, char **argv) {
     scene::Scene scene;
     scene.addObject(std::make_shared<object::Sphere>(core::Point3(0.0, 0.0, -5.0), 1.0));
     renderer::SimpleRenderer sceneRenderer(800, 600);
+    std::optional<std::future<renderer::ImageBuffer> > futureResult = {};
 
     auto running = true;
     while (running) {
@@ -62,22 +64,28 @@ int main(int argc, char **argv) {
             }
         }
 
-        auto result = sceneRenderer.render(scene);
-
-        uint8_t *pixels;
-        int pitch;
-        SDL_LockTexture(image, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
-        for (int y = 0; y < result.getHeight(); ++y) {
-            for (int x = 0; x < result.getWidth(); ++x) {
-                auto color = result.getPixel(x, y);
-                auto pos = (y * result.getWidth() + x) * 4;
-                pixels[pos] = color.r_u8(); // R
-                pixels[pos + 1] = color.g_u8(); // G
-                pixels[pos + 2] = color.b_u8(); // B
-                pixels[pos + 3] = 255; // A
-            }
+        if (!futureResult) {
+            futureResult = {sceneRenderer.render(scene)};
         }
-        SDL_UnlockTexture(image);
+
+        if (futureResult && futureResult->wait_for(0s) == std::future_status::ready) {
+            auto result = futureResult.value().get();
+            uint8_t *pixels;
+            int pitch;
+            SDL_LockTexture(image, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
+            for (int y = 0; y < result.getHeight(); ++y) {
+                for (int x = 0; x < result.getWidth(); ++x) {
+                    auto color = result.getPixel(x, y);
+                    auto pos = (y * result.getWidth() + x) * 4;
+                    pixels[pos] = color.r_u8(); // R
+                    pixels[pos + 1] = color.g_u8(); // G
+                    pixels[pos + 2] = color.b_u8(); // B
+                    pixels[pos + 3] = 255; // A
+                }
+            }
+            SDL_UnlockTexture(image);
+            futureResult = {};
+        }
 
         SDL_SetRenderDrawColorFloat(renderer, 0.0f, 0.0f, 0.0f, 1.0f);
         SDL_RenderClear(renderer);

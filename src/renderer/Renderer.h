@@ -1,4 +1,6 @@
 #pragma once
+#include <future>
+
 #include "ImageBuffer.h"
 
 namespace pathtracer::scene {
@@ -12,6 +14,6 @@ namespace pathtracer::renderer {
 
         virtual void resize(unsigned int width, unsigned int height) = 0;
 
-        [[nodiscard]] virtual ImageBuffer render(const scene::Scene &scene) = 0;
+        [[nodiscard]] virtual std::future<ImageBuffer> render(const scene::Scene &scene) = 0;
     };
 }
